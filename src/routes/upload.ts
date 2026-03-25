@@ -4,7 +4,6 @@ import db from '../config/database';
 
 const router = Router();
 
-// Rota para fazer upload da CAPA de um mangá
 router.post('/cover', uploadCover.single('cover_image'), async (req: Request, res: Response) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Nenhum arquivo de capa enviado.' });
