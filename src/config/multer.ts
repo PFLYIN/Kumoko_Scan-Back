@@ -18,17 +18,13 @@ const imageFileFilter = (req: Request, file: File, cb: FileFilterCallback) => {
 const coverStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const dir = 'uploads/covers';
-    // Cria o diretório se não existir
     fs.mkdirSync(dir, { recursive: true });
     cb(null, dir);
   },
   filename: (req, file, cb) => {
-    // O ID do mangá deve ser passado no corpo da requisição
-    const mangaId = req.body.manga_id;
-    if (!mangaId) {
-      return cb(new Error('ID do mangá não fornecido!'), '');
-    }
-    // Nome do arquivo: cover-idDoManga-timestamp.extensao
+    const mangaId = req.params.manga_id;
+    if (!mangaId) return cb(new Error('ID do mangá não fornecido!'), '');
+
     const uniqueSuffix = Date.now();
     const extension = path.extname(file.originalname);
     cb(null, `cover-${mangaId}-${uniqueSuffix}${extension}`);
@@ -42,7 +38,7 @@ const pagesStorage = multer.diskStorage({
     if (!manga_id || !capitulo_id) {
       return cb(new Error('ID do mangá ou do capítulo não fornecido!'), '');
     }
-    // Organiza as páginas em pastas por mangá e capítulo
+  
     const dir = `uploads/mangas/${manga_id}/${capitulo_id}`;
     fs.mkdirSync(dir, { recursive: true });
     cb(null, dir);

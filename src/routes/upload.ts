@@ -1,16 +1,17 @@
-import { Router, Request, Response } from 'express';
-import { uploadCover, uploadPages } from '../config/multer';
-import db from '../config/database';
-
+import { Router } from 'express';
+import { uploadCover } from '../config/multer';
+import UploadController from '../controllers/UploadController';
 const router = Router();
 
-router.post('/cover', uploadCover.single('cover_image'), async (req: Request, res: Response) => {
+router.post('/cover/:manga_id', uploadCover.single('cover_image'), UploadController.cover);
+
+router.post('/cover/:manga_id', uploadCover.single('cover_image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Nenhum arquivo de capa enviado.' });
   }
 
   const capa_url = req.file.path;
-  const manga_id = req.body.manga_id;
+  const manga_id = req.params.manga_id;
 
   try {
     await db.Manga.update({ capa_url }, { where: { id: manga_id } });
@@ -27,8 +28,8 @@ router.post('/cover', uploadCover.single('cover_image'), async (req: Request, re
   }
 });
 
-// Rota para fazer upload de uma PÁGINA de um capítulo
-router.post('/page', uploadPages.single('page_image'), async (req: Request, res: Response) => {
+
+router.post('/page/:manga_id/:capitulo_id/:numero_pagina', uploadPages.single('page_image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'Nenhum arquivo de página enviado.' });
   }
