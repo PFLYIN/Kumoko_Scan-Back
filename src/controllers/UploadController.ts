@@ -1,18 +1,25 @@
-import { Request, Response } from "express";
-import db from "../config/database";
+import { Request, Response } from 'express';
 
 class UploadController {
-    async cover(req: Request, res: Response) {
-        if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo de capa enviado' });
+  // Upload da Capa (Max 10 linhas)
+  public async cover(req: Request, res: Response) {
+    if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
+    
+    const { manga_id } = req.params;
+    // await db.Manga.update({ capa_url: req.file.path }, { where: { id: manga_id } });
+    
+    return res.status(200).json({ message: 'Capa OK!', manga_id, capa_url: req.file.path });
+  }
 
-        const capa_url = req.file.path;
-        const { manga_id } = req.params;
-
-        try {
-            await db.Manga.update({ capa_url }, { where: { id: manga_id } });
-            return res.json({ message: 'Sucesso', manga_id, capa_url});
-        } catch (error) {
-            return res.status(500).json({ error: 'Erro ao salvar a capa do mangá'});
-        }
-    }
+  // Upload da Página (Max 10 linhas)
+  public async page(req: Request, res: Response) {
+    if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
+    
+    const { manga_id, capitulo_id, numero_pagina } = req.params;
+    // await db.Pagina.create({ manga_id, capitulo_id, numero_pagina, imagem_url: req.file.path });
+    
+    return res.status(200).json({ message: 'Página OK!', capitulo_id, numero_pagina, imagem_url: req.file.path });
+  }
 }
+
+export default new UploadController();

@@ -14,7 +14,6 @@ const imageFileFilter = (req: Request, file: File, cb: FileFilterCallback) => {
   }
 };
 
-// Configuração para o upload da CAPA do mangá
 const coverStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const dir = 'uploads/covers';
@@ -31,7 +30,6 @@ const coverStorage = multer.diskStorage({
   }
 });
 
-// Configuração para o upload das PÁGINAS do capítulo
 const pagesStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     const { manga_id, capitulo_id } = req.body;
