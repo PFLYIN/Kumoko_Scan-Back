@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import uploadRoutes from './routes/upload';
+import mangaRoutes from './routes/manga';
+import capituloRoutes from './routes/capitulo';
 
 class App {
   public server: express.Application;
@@ -20,6 +22,8 @@ class App {
 
   private routes() {
     this.server.use('/upload', uploadRoutes);
+    this.server.use('/mangas', mangaRoutes);
+    this.server.use('/capitulos', capituloRoutes);
   }
 }
 
