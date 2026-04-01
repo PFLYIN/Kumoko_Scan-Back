@@ -3,7 +3,8 @@ import CapituloController from '../controllers/CapituloController';
 
 const router = Router();
 
-// Rota POST para criar o capítulo
 router.post('/', CapituloController.create);
+router.put('/:id', CapituloController.update);
+router.delete('/:id', CapituloController.delete);
 
 export default router;

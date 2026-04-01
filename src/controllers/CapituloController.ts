@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
 import Capitulo from '../models/Capitulo';
 
 class CapituloController {
@@ -11,10 +13,45 @@ class CapituloController {
             const novoCapitulo = await Capitulo.create({ manga_id, numero, titulo });
             return res.status(201).json(novoCapitulo);
         } catch (error) {
-            console.error("Erro ao criar capítulo:", error);
-            return res.status(500).json({ error: "Erro interno"});
+            return res.status(500).json({ error: 'Erro interno.' });
         }
-    } 
+    }
+    
+    public async update(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { numero, titulo } = req.body;
+      
+      const [linhasAfetadas] = await Capitulo.update({ numero, titulo }, { where: { id } });
+      if (linhasAfetadas === 0) return res.status(404).json({ error: 'Capítulo não encontrado.' });
+      
+      return res.status(200).json({ message: 'Capítulo atualizado com sucesso!' });
+    } catch (error) {
+      return res.status(500).json({ error: 'Erro ao atualizar.' });
+    }
+  }
+
+  // 3. Deletar (DELETE) - Com faxina na pasta do capítulo
+  public async delete(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const capitulo = await Capitulo.findByPk(id);
+      
+      if (!capitulo) return res.status(404).json({ error: 'Capítulo não encontrado.' });
+
+      // Apaga apenas a pasta Deste capítulo específico
+      const pastaCapitulo = path.resolve(__dirname, '..', '..', 'uploads', 'pages', `manga_${capitulo.manga_id}`, `capitulo_${id}`);
+      if (fs.existsSync(pastaCapitulo)) {
+        fs.rmSync(pastaCapitulo, { recursive: true, force: true });
+      }
+
+      await capitulo.destroy();
+      
+      return res.status(200).json({ message: 'Capítulo e suas páginas foram varridos!' });
+    } catch (error) {
+      return res.status(500).json({ error: 'Erro ao deletar.' });
+    }
+  }
 }
 
 export default new CapituloController();
