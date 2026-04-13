@@ -5,13 +5,24 @@ import path from 'path';
 import { Query } from 'mysql2/typings/mysql/lib/protocol/sequences/Query';
 
 class MangaController {
- public async create(req: Request, res: Response) {
+public async create(req: Request, res: Response) {
     try {
       const { nome, volume } = req.body;
       if (!nome || volume === undefined) return res.status(400).json({ error: 'Nome e volume são obrigatórios.' });
-      const novoManga = await Manga.create({ nome, volume });
+
+      // O Multer desempacotou a foto e guardou as informações dela no req.file
+      // Nós pegamos o caminho exato onde ele salvou a foto no seu HD
+      const capa_url = req.file ? req.file.path : null;
+
+      const novoManga = await Manga.create({ 
+        nome, 
+        volume,
+        capa_url // <-- Gravamos o caminho no banco de dados!
+      });
+      
       return res.status(201).json(novoManga);
     } catch (error) {
+      console.error('Erro ao criar mangá:', error);
       return res.status(500).json({ error: 'Erro interno.' });
     }
   }
@@ -73,6 +84,7 @@ class MangaController {
       return res.status(500).json({ error: 'Erro ao deletar.' });
         }
     }
+    
 }
 
 

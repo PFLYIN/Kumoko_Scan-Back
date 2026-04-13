@@ -31,7 +31,16 @@ class CapituloController {
     }
   }
 
-  // 3. Deletar (DELETE) - Com faxina na pasta do capítulo
+    public async listByManga(req: Request, res: Response) {
+    try {
+      const { manga_id } = req.params;
+      const capitulos = await Capitulo.findAll({ where: { manga_id } });
+      return res.status(200).json(capitulos);
+    } catch (error) {
+      return res.status(500).json({ error: 'Erro ao listar capítulos.' });
+    }
+  }
+
   public async delete(req: Request, res: Response) {
     try {
       const { id } = req.params;

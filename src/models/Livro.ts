@@ -1,23 +1,20 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../config/database';
 
-class Manga extends Model {
-  // A mágica acontece aqui: trocamos 'public' por 'declare'
+class Livro extends Model {
   declare id: number;
   declare nome: string;
-  declare volume: number;
   declare capa_url: string;
 }
 
-Manga.init({
+Livro.init({
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
   nome: { type: DataTypes.STRING(255), allowNull: false },
-  volume: { type: DataTypes.INTEGER, allowNull: true },
   capa_url: { type: DataTypes.STRING(255), allowNull: true }
 }, {
   sequelize: db,
-  tableName: 'mangas', // <- Forçamos o Sequelize a usar o nome exato da tabela no plural
+  tableName: 'livros',
   timestamps: false
 });
 
-export default Manga;
+export default Livro;

@@ -1,22 +1,24 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../config/database';
 
-class Manga extends Model {
-  public id!: number;
-  public nome!: string;
-  public volume!: number;
-  public capa_url!: string;
+class Pagina extends Model {
+  declare id: number;
+  declare manga_id: number;
+  declare capitulo_id: number;
+  declare numero_pagina: number;
+  declare imagem_url: string;
 }
 
-Manga.init({
+Pagina.init({
   id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-  nome: { type: DataTypes.STRING(300), allowNull: false },
-  volume: { type: DataTypes.INTEGER, allowNull: false },
-  capa_url: { type: DataTypes.STRING(255), allowNull: true }
-}, { 
-  sequelize: db, 
-  tableName: 'manga', 
-  timestamps: false // Deixamos o SQL cuidar das datas
+  manga_id: { type: DataTypes.INTEGER, allowNull: false },
+  capitulo_id: { type: DataTypes.INTEGER, allowNull: false },
+  numero_pagina: { type: DataTypes.INTEGER, allowNull: false },
+  imagem_url: { type: DataTypes.STRING(255), allowNull: false }
+}, {
+  sequelize: db,
+  tableName: 'paginas',
+  timestamps: false
 });
 
-export default Manga;
+export default Pagina;

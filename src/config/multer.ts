@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import { Request } from 'express';
 import fs from 'fs';
 
+
 // 1. Filtro inteligente de imagens
 const imageFileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
   const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
