@@ -14,4 +14,4 @@
 - npm i -D typescript ts-node-dev @types/node @types/express
 
 - npm install --save-dev jest ts-jest @types/jest
-- npx test //pra realizar o teste//
+- npx test

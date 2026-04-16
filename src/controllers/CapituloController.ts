@@ -48,7 +48,6 @@ class CapituloController {
       
       if (!capitulo) return res.status(404).json({ error: 'Capítulo não encontrado.' });
 
-      // Apaga apenas a pasta Deste capítulo específico
       const pastaCapitulo = path.resolve(__dirname, '..', '..', 'uploads', 'pages', `manga_${capitulo.manga_id}`, `capitulo_${id}`);
       if (fs.existsSync(pastaCapitulo)) {
         fs.rmSync(pastaCapitulo, { recursive: true, force: true });

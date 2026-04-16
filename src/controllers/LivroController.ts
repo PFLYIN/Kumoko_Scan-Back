@@ -7,7 +7,6 @@ class LivroController {
       const { nome } = req.body;
       if (!nome) return res.status(400).json({ error: 'Nome é obrigatório.' });
 
-      // Pegamos a capa do mesmo jeito que fizemos no Mangá!
       const capa_url = req.file ? req.file.path : null;
 
       const novoLivro = await Livro.create({ nome, capa_url });

@@ -4,6 +4,6 @@ module.exports = {
     password: '',
     database: 'Kumoko_scan',
     host: 'localhost',
-    dialect: 'mysql', // ou mysql
+    dialect: 'mysql',
   },
 };

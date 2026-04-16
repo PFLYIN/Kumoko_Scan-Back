@@ -2,7 +2,6 @@ import { DataTypes, Model } from 'sequelize';
 import db from '../config/database';
 
 class Manga extends Model {
-  // A mágica acontece aqui: trocamos 'public' por 'declare'
   declare id: number;
   declare nome: string;
   declare volume: number;
@@ -16,7 +15,7 @@ Manga.init({
   capa_url: { type: DataTypes.STRING(255), allowNull: true }
 }, {
   sequelize: db,
-  tableName: 'mangas', // <- Forçamos o Sequelize a usar o nome exato da tabela no plural
+  tableName: 'mangas',
   timestamps: false
 });
 

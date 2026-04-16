@@ -10,14 +10,12 @@ public async create(req: Request, res: Response) {
       const { nome, volume } = req.body;
       if (!nome || volume === undefined) return res.status(400).json({ error: 'Nome e volume são obrigatórios.' });
 
-      // O Multer desempacotou a foto e guardou as informações dela no req.file
-      // Nós pegamos o caminho exato onde ele salvou a foto no seu HD
       const capa_url = req.file ? req.file.path : null;
 
       const novoManga = await Manga.create({ 
         nome, 
         volume,
-        capa_url // <-- Gravamos o caminho no banco de dados!
+        capa_url
       });
       
       return res.status(201).json(novoManga);
@@ -27,7 +25,6 @@ public async create(req: Request, res: Response) {
     }
   }
 
-  // 2. Ler (GET)
   public async list(req: Request, res: Response) {
     try {
       const page = parseInt(req.query.page as string) || 1;
@@ -40,7 +37,6 @@ public async create(req: Request, res: Response) {
     }
   }
 
-  // 3. Atualizar (PUT)
   public async update(req: Request, res: Response) {
     try {
       const { id } = req.params;
@@ -55,7 +51,6 @@ public async create(req: Request, res: Response) {
     }
   }
 
-  // 4. Deletar (DELETE) - Com faxina no HD!
   public async delete(req: Request, res: Response) {
     try {
       const { id } = req.params;
@@ -63,19 +58,15 @@ public async create(req: Request, res: Response) {
       
       if (!manga) return res.status(404).json({ error: 'Mangá não encontrado.' });
 
-      // A. Apaga o arquivo da capa solto, se existir
       if (manga.capa_url && fs.existsSync(manga.capa_url)) {
         fs.unlinkSync(manga.capa_url); 
       }
 
-      // B. Apaga a pasta inteira do mangá (que contém os capítulos e páginas)
       const pastaManga = path.resolve(__dirname, '..', '..', 'uploads', 'pages', `manga_${id}`);
       if (fs.existsSync(pastaManga)) {
-        // recursive: true apaga tudo que tem dentro, force: ignora se não existir
         fs.rmSync(pastaManga, { recursive: true, force: true });
       }
 
-      // C. Deleta do banco de dados
       await manga.destroy();
       
       return res.status(200).json({ message: 'Mangá e todos os seus arquivos foram desintegrados do sistema!' });
